@@ -14,15 +14,10 @@ BASE_QUERY = {
     "excludeSectionId": False,
     "hasCollectionApertura": False,
     "imageConfig": "newBoxArticles",
-    "page": 1,  # va a ir subiendo en base a la cantidad de noticias que se pida
+    "page": 1,
     "promoItemsOnly": False,
     "sectionId": None,
-    "sectionsIds": (
-        "/economia", "/sociedad", "/deportes", "/politica",
-        "/espectaculos", "/el-mundo", "/tecnologia", "/propiedades",
-        "/dolar-hoy", "/buenos-aires", "/seguridad", "/educacion",
-        "/cultura", "/salud", "/ciencia", ""
-    ),
+    "sectionsIds": "(\"/economia\",\"/sociedad\",\"/deportes\",\"/politica\",\"/espectaculos\",\"/el-mundo\",\"/tecnologia\",\"/propiedades\",\"/dolar-hoy\",\"/buenos-aires\",\"/seguridad\",\"/educacion\",\"/cultura\",\"/salud\",\"/ciencia\",\"\")",
     "shouldNotFilter": False,
     "size": 30,
     "sourceOrigin": "composer",
@@ -30,22 +25,24 @@ BASE_QUERY = {
     "website": "la-nacion-ar"
 }
 
+
 def fetch_json_page(page: int) -> dict | None:
     # Obtiene la pagina pedida de noticias desde la API interna
     
     query = BASE_QUERY.copy()
     query["page"] = page
 
-    encoded_query = quote(json.dumps(query))
-    url = f"{API_URL}?query={encoded_query}"
+    # No usar json.dumps con sort_keys. Respetar estructura string.
+    encoded_query = quote(json.dumps(query, separators=(',', ':')))
+
+    url = f"{API_URL}?query={encoded_query}&d=1919&mxId=00000000&_website=la-nacion-ar"
 
     try:
         r = requests.get(url, headers=HEADERS, timeout=10)
         if r.status_code != 200:
-            print(f"[ALERTA] Codigo {r.status_code} en page={page}")
+            print(f"[ALERTA] Código {r.status_code} en page={page}")
             return None
         return r.json()
-    
     except Exception as e:
-        print(f"[ERROR] Fallo request JSON page {page}: {e}")
+        print(f"[ERROR] page {page}: {e}")
         return None

@@ -9,7 +9,7 @@ from src.api_client import fetch_json_page
 def fetch_all_pages(max_pages=10):
     todas = []
 
-    for page in range(2, max_pages + 1):
+    for page in range(1, max_pages + 1):
         print(f"[INFO] Fetching page {page}...")
         data = fetch_json_page(page)
 
@@ -23,24 +23,9 @@ def fetch_all_pages(max_pages=10):
     return todas
 
 def main():
-    print(f"[INFO] Obteniendo página HTML inicial: {URL_ULTIMAS_NOTICIAS}")
-    html = fetch_page(URL_ULTIMAS_NOTICIAS)
-
-    if html is None:
-        print("[ERROR] No se pudo obtener el HTML inicial")
-        return
-
-    # Parseo del html inicial
-    noticias_html = parse_noticias(html)
-    print(f"[INFO] Noticias obtenidas del HTML inicial: {len(noticias_html)}")
-
-    # Parsear mediante API resto de noticias
-    print("[INFO] Descargando más páginas vía API...")
-    noticias_json = fetch_all_pages(max_pages=15)
-    print(f"[INFO] Noticias obtenidas de la API: {len(noticias_json)}")
-
-    # Juntar resultados
-    noticias = noticias_html + noticias_json
+    print("[INFO] Descargando noticias vía API...")
+    noticias = fetch_all_pages(max_pages=15)
+    
     print(f"[INFO] Total de noticias obtenidas: {len(noticias)}")
 
     # Mostrar 3 ultimas noticias

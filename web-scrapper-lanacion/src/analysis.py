@@ -83,7 +83,7 @@ def grafico_horas(horas: list[int]):
 def main():
     noticias = load_noticias()
 
-    # --- Analisis ---
+    # Analisis
     counter_tags = contar_tags(noticias)
     counter_autores = contar_autores(noticias)
     horas = extraer_horas(noticias)
@@ -98,7 +98,7 @@ def main():
     print("\nHORAS MÁS FRECUENTES:")
     print(Counter(horas).most_common(10))
 
-    # --- Graficos ---
+    # Graficos
     grafico_tags(counter_tags)
     grafico_autores(counter_autores)
     grafico_horas(horas)
