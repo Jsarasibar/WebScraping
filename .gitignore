@@ -1,0 +1,65 @@
+# Carpeta con HTML, imágenes y recursos descargados
+web-scrapper-lanacion/data/raw/
+
+# Datos procesados (si no querés subirlos al repo)
+web-scrapper-lanacion/data/processed/
+
+# Salida de gráficos
+web-scrapper-lanacion/output/
+
+# Caché de pytest / tests
+web-scrapper-lanacion/.pytest_cache/
+web-scrapper-lanacion/tests/__pycache__/
+
+# Archivos temporales creados manualmente
+web-scrapper-lanacion/tmp/
+web-scrapper-lanacion/*.tmp
+
+# Compiled bytecode
+__pycache__/
+*/__pycache__/
+*.py[cod]
+
+# Compiled C extensions
+*.so
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+
+# VSCode
+.vscode/
+
+# PyCharm / JetBrains
+.idea/
+
+# MacOS
+.DS_Store
+
+# Linux temporales
+*.swp
+*.swo
+
+# Claves SSH privadas
+ssh-GH-Jsarasibar
+id_rsa
+id_ecdsa
+*.pem
+*.key
+
+ssh-GH-Jsarasibar.pub
+
+# Token files
+*.token
+*.secret
+*.credentials
+
+*.log
+
+# Distribuciones
+dist/
+build/
+*.egg-info/
