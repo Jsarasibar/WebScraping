@@ -33,13 +33,13 @@ def parse_noticias (html: str) -> list[dict]:
     articles = soup.find_all("article", class_="mod-article")
     
     for art in articles:
+        # Fecha / hora
+        time_tag = art.find("time", class_="com-hour")
+        fecha_hora = time_tag.get_text(strip = True) if time_tag else None
+        
         descripcion = art.find("section", class_="mod-description")
         if not descripcion:
             continue
-        
-        # Fecha / hora
-        time_tag = descripcion.find("time", class_="com_hour")
-        fecha_hora = time_tag.get_text(strip = True) if time_tag else None
         
         # Titulo y URL
         h2_tag = descripcion.find("h2", class_="com-title")
@@ -55,11 +55,30 @@ def parse_noticias (html: str) -> list[dict]:
             url_completa = URL_BASE + href
         else:
             url_completa = None
+        
+        # Tags y Autor
+        
+        tags = []
+        autor = None
+        
+        for div in descripcion.find_all("div"):
+            enlaces = div.find_all("a")
             
+            for a in enlaces:
+                titulo_attr = a.get("title", " ")
+                
+                if titulo_attr.startswith("Por "):
+                    autor = a.get_text(strip = True)[4:]
+                else:
+                    tags.append(a.get_text(strip = True))
+        
+        
         noticia = {
             "titulo": titulo,
             "url": url_completa,
-            "fecha_hora": fecha_hora
+            "fecha_hora": fecha_hora,
+            "tags": tags,
+            "autor": autor
         }
         
         if titulo and url_completa:
@@ -80,11 +99,13 @@ def main():
     print(f"[INFO] Se obtuvieron {len(noticias)} noticias")
     
     # Mostrar las primeras 5
-    for i,n in enumerate(noticias[:5], start=1):
+    for i,n in enumerate(noticias[:11], start=1):
         print(f"\nNoticia #{i}")
-        print(f"  Título     : {n['titulo']}")
-        print(f"  Fecha/Hora : {n['fecha_hora']}")
-        print(f"  URL        : {n['url']}")
+        print(f"  Título : {n['titulo']}")
+        print(f"  Hora : {n['fecha_hora']}")
+        print(f"  URL : {n['url']}")
+        print(f"  TAGS : {n['tags']}")
+        print(f"  AUTOR : {n['autor']}")
         
 if __name__ == "__main__":
     main()
