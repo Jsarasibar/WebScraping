@@ -34,11 +34,13 @@ def extraer_horas(noticias: list[dict]) -> list[dict]:
 
 # Grafica en barras las categorias con mas publicaciones
 def grafico_tags(counter_tags: Counter, top=10):
+    # Grafico de barras tags/categorias mas frecuentes
+    
     etiquetas = [tag for tag, _ in counter_tags.most_common(top)]
     valores = [count for _, count in counter_tags.most_common(top)]
 
     plt.figure(figsize=(10, 5))
-    plt.bar(etiquetas, valores)
+    plt.bar(etiquetas, valores, color = "#D61031")
     plt.xticks(rotation=45, ha="right")
     plt.title("Top categorías de noticias")
     plt.tight_layout()
@@ -47,12 +49,13 @@ def grafico_tags(counter_tags: Counter, top=10):
     print("[INFO] Gráfico guardado en output/top_categorias.png")
 
 def grafico_autores(counter_autores: Counter, top=10):
-    """Gráfico de barras: autores más frecuentes."""
+    # Grafico de barras autores mas frecuentes
+    
     etiquetas = [aut for aut, _ in counter_autores.most_common(top)]
     valores = [count for _, count in counter_autores.most_common(top)]
 
     plt.figure(figsize=(10, 5))
-    plt.bar(etiquetas, valores)
+    plt.bar(etiquetas, valores, color = "#D61095")
     plt.xticks(rotation=45, ha="right")
     plt.title("Autores más frecuentes")
     plt.tight_layout()
@@ -62,22 +65,45 @@ def grafico_autores(counter_autores: Counter, top=10):
 
 
 def grafico_horas(horas: list[int]):
-    """Gráfico de línea: cantidad de noticias por hora."""
+    # Grafico de linea cantidad de noticias por hora (0 a 23)
+
     counter = Counter(horas)
 
-    horas_ordenadas = sorted(counter.keys())
-    cantidades = [counter[h] for h in horas_ordenadas]
+    horas_completas = list(range(24))
+    cantidades = [counter.get(h, 0) for h in horas_completas]
 
-    plt.figure(figsize=(10, 5))
-    plt.plot(horas_ordenadas, cantidades, marker="o")
+    # Calcular hora con mas noticias
+    max_count = max(cantidades)
+    hora_max = cantidades.index(max_count)
+
+    plt.figure(figsize=(12, 5))
+    plt.plot(horas_completas, cantidades, marker="o", color = "#B510D6")
+
+    # resalta el punto maximo
+    plt.scatter(hora_max, max_count, s=40, color="#D61031", zorder=5)
+
+    # añade texto sobre el punto maximo de noticias
+    plt.text(
+        hora_max,
+        max_count + 0.7,  # arriba del punto
+        f"Hora con más noticias: {hora_max} ({max_count})",
+        ha="center",
+        fontsize=10,
+        fontweight="bold"
+    )
+
+    # Ajustes del grafico
     plt.title("Distribución de noticias por hora del día")
-    plt.xlabel("Hora")
+    plt.xlabel("Hora del día (0–23)")
     plt.ylabel("Cantidad de noticias")
-    plt.grid(True)
+    plt.xticks(horas_completas)  # Mostrar las 24 horas
+    plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig("output/noticias_por_hora.png")
     plt.close()
-    print("[INFO] Gráfico guardado en output/noticias_por_hora.png")
+
+    print("[INFO] Gráfico de horas guardado en output/noticias_por_hora.png")
+
     
     
 def main():
@@ -90,13 +116,13 @@ def main():
 
     # Resumen en consola
     print("\nTOP TAGS:")
-    print(counter_tags.most_common(10))
+    print(counter_tags.most_common(5))
 
     print("\nTOP AUTORES:")
-    print(counter_autores.most_common(10))
+    print(counter_autores.most_common(5))
 
     print("\nHORAS MÁS FRECUENTES:")
-    print(Counter(horas).most_common(10))
+    print(Counter(horas).most_common(5))
 
     # Graficos
     grafico_tags(counter_tags)
